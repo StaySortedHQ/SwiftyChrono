@@ -9,5 +9,11 @@
 import Foundation
 
 class JPMergeDateRangeRefiner: ENMergeDateRangeRefiner {
-    override var PATTERN: String { return "^\\s*(から|ー)\\s*$" }
+    
+    override var PATTERN: String {
+        
+        "^\\s*(から|ー)\\s*$"
+        
+    }
+    
 }

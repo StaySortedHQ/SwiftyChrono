@@ -8,6 +8,10 @@
 
 import Foundation
 
+// -----------------
+// MARK: - Constants
+// -----------------
+
 private let PATTERN = "(\\W|^)" +
     "(?:(?:\\,|\\(|\\（)\\s*)?" +
     "(?:(este|pasado|pr[oó]ximo)\\s*)?" +
@@ -17,42 +21,76 @@ private let PATTERN = "(\\W|^)" +
     "(?=\\W|$)"
 
 private let prefixGroup = 2
+
 private let weekdayGroup = 3
+
 private let postfixGroup = 4
 
+// --------------
+// MARK: - Parser
+// --------------
+
 public class ESWeekdayParser: Parser {
-    override var pattern: String { return PATTERN }
-    override var language: Language { return .spanish }
+    
+    // ------------------
+    // MARK: - Properties
+    // ------------------
+
+    override var pattern: String { PATTERN }
+    
+    override var language: Language { .spanish }
+    
+    // ---------------
+    // MARK: - Extract
+    // ---------------
     
     override public func extract(text: String, ref: Date, match: NSTextCheckingResult, opt: [OptionType: OptionValue]) -> ParsedResult? {
+        
         let (matchText, index) = matchTextAndIndex(from: text, andMatchResult: match)
+        
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
         let dayOfWeek = match.string(from: text, atRangeIndex: weekdayGroup).lowercased()
+        
         guard let offset = ES_WEEKDAY_OFFSET[dayOfWeek] else {
+            
             return nil
+            
         }
         
         let prefix: String? = match.isNotEmpty(atRangeIndex: prefixGroup) ? match.string(from: text, atRangeIndex: prefixGroup) : nil
+        
         let postfix: String? = match.isNotEmpty(atRangeIndex: postfixGroup) ? match.string(from: text, atRangeIndex: postfixGroup) : nil
+        
         var modifier = ""
+        
         if prefix != nil || postfix != nil {
+            
             let norm = (prefix ?? postfix ?? "").lowercased()
             
             if norm == "pasado" {
+                
                 modifier = "last"
-            }
-            else if norm == "próximo" || norm == "proximo" {
+                
+            } else if norm == "próximo" || norm == "proximo" {
+                
                 modifier = "next"
-            }
-            else if norm == "este" {
+                
+            } else if norm == "este" {
+                
                 modifier =  "this"
+                
             }
+            
         }
         
         result = updateParsedComponent(result: result, ref: ref, offset: offset, modifier: modifier)
+        
         result.tags[.esWeekdayParser] = true
+        
         return result
+        
     }
+    
 }
 

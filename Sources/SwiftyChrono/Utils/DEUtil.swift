@@ -24,6 +24,7 @@ let DE_WEEKDAY_OFFSET = [
     "samstag": 6,
     "sa": 6
 ]
+
 let DE_WEEKDAY_WORDS_PATTERN = "(?:" + DE_WEEKDAY_OFFSET.keys.joined(separator: "|") + ")"
 
 let DE_MONTH_OFFSET = [
@@ -64,6 +65,7 @@ let DE_MONTH_OFFSET = [
     "dez": 12,
     "dez.": 12
 ]
+
 let DE_MONTH_OFFSET_PATTERN = "(?:" + DE_MONTH_OFFSET.keys.joined(separator: "|") + ")"
 
 let DE_INTEGER1_WORDS = [
@@ -74,21 +76,25 @@ let DE_INTEGER1_WORDS = [
     "eines": 1,
     "einem": 1,
 ]
+
 let DE_INTEGER1_WORDS_PATTERN = "(?:" + DE_INTEGER1_WORDS.keys.joined(separator: "|") + ")"
 
-let DE_INTEGER_WORDS = DE_INTEGER1_WORDS.merged(with: [
-    "zwei": 2,
-    "drei": 3,
-    "vier": 4,
-    "fünf": 5,
-    "sechs": 6,
-    "sieben": 7,
-    "acht": 8,
-    "neun": 9,
-    "zehn": 10,
-    "elf": 11,
-    "zwölf": 12
-])
+let DE_INTEGER_WORDS = DE_INTEGER1_WORDS.merged(
+    with: [
+        "zwei": 2,
+        "drei": 3,
+        "vier": 4,
+        "fünf": 5,
+        "sechs": 6,
+        "sieben": 7,
+        "acht": 8,
+        "neun": 9,
+        "zehn": 10,
+        "elf": 11,
+        "zwölf": 12
+    ]
+)
+
 let DE_INTEGER_WORDS_PATTERN = "(?:" + DE_INTEGER_WORDS.keys.joined(separator: "|") + ")"
 
 // all need /n/r/m/s

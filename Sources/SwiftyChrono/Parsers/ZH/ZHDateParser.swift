@@ -8,6 +8,10 @@
 
 import Foundation
 
+// -----------------
+// MARK: - Constants
+// -----------------
+
 private let PATTERN =
     "(\\d{2,4}|\(ZH_NUMBER_PATTERN){2,4})?" +
     "(?:\\s*)" +
@@ -22,52 +26,92 @@ private let PATTERN =
     "(?:日|號|号)?"
 
 private let yearGroup = 1
+
 private let monthGroup = 2
+
 private let dayGroup = 3
 
+// --------------
+// MARK: - Parser
+// --------------
+
 public class ZHDateParser: Parser {
-    override var pattern: String { return PATTERN }
-    override var language: Language { return .chinese }
+    
+    // ------------------
+    // MARK: - Properties
+    // ------------------
+
+    override var pattern: String { PATTERN }
+    
+    override var language: Language { .chinese }
+    
+    // ---------------
+    // MARK: - Extract
+    // ---------------
     
     override public func extract(text: String, ref: Date, match: NSTextCheckingResult, opt: [OptionType: OptionValue]) -> ParsedResult? {
+        
         let (matchText, index) = matchTextAndIndexForCHHant(from: text, andMatchResult: match)
+        
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
         let refMoment = ref
+        
         let startMoment = refMoment
         
         //Month
         let monthString = match.string(from: text, atRangeIndex: monthGroup)
+        
         guard let month = NSRegularExpression.isMatch(forPattern: "\\d+", in: monthString) ? Int(monthString) : ZHStringToNumber(text: monthString) else {
+            
             return nil
+            
         }
+        
         result.start.assign(.month, value: month)
         
         //Day
         if match.isNotEmpty(atRangeIndex: dayGroup) {
+            
             let dayString = match.string(from: text, atRangeIndex: dayGroup)
+            
             guard let day = NSRegularExpression.isMatch(forPattern: "\\d+", in: dayString) ? Int(dayString) : ZHStringToNumber(text: dayString) else {
+                
                 return nil
+                
             }
             
             result.start.assign(.day, value: day)
+            
         } else {
+            
             result.start.imply(.day, to: startMoment.day)
+            
         }
         
         //Year
         if match.isNotEmpty(atRangeIndex: yearGroup) {
+            
             let yearString = match.string(from: text, atRangeIndex: yearGroup)
+            
             guard let year = NSRegularExpression.isMatch(forPattern: "\\d+", in: yearString) ? Int(yearString) : ZHStringToYear(text: yearString) else {
+                
                 return nil
+                
             }
             
             result.start.assign(.year, value: year)
+            
         } else {
+            
             result.start.imply(.year, to: startMoment.year)
+            
         }
         
         result.tags[.zhHantDateParser] = true
+        
         return result
+        
     }
+    
 }

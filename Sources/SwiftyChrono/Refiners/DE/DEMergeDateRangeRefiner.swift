@@ -8,7 +8,18 @@
 
 import Foundation
 
-class DEMergeDateRangeRefiner: MergeDateRangeRefiner {
-    override var PATTERN: String { return "^\\s*(bis|\\-)\\s*$" }
-    override var TAGS: TagUnit { return .deMergeDateRangeRefiner }
+final class DEMergeDateRangeRefiner: MergeDateRangeRefiner {
+    
+    override var PATTERN: String {
+        
+        "^\\s*(bis|\\-)\\s*$"
+        
+    }
+    
+    override var TAGS: TagUnit {
+        
+        .deMergeDateRangeRefiner
+        
+    }
+    
 }

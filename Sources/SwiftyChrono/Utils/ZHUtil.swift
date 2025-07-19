@@ -42,6 +42,7 @@ let ZH_WEEKDAY_OFFSET = [
 let ZH_WEEKDAY_OFFSET_PATTERN = "[" + ZH_WEEKDAY_OFFSET.keys.joined(separator: "") + "]"
 
 func ZHStringToNumber(text: String) -> Int {
+    
     var number = 0;
     
     for char in text.map({ String($0) }) {
@@ -54,16 +55,19 @@ func ZHStringToNumber(text: String) -> Int {
     }
     
     return number
+    
 }
 
 func ZHStringToYear(text: String) -> Int {
+    
     var string = ""
     
     for char in text.map({ String($0) }) {
+        
         string += "\(ZH_NUMBER[char]!)"
+        
     }
     
     return Int(string)!
+    
 }
-
-

@@ -8,6 +8,10 @@
 
 import Foundation
 
+// -----------------
+// MARK: - Constants
+// -----------------
+
 private let PATTERN = "(\\W|^)" +
     "(?:(Dimanche|Lundi|Mardi|mercredi|Jeudi|Vendredi|Samedi|Dim|Lun|Mar|Mer|Jeu|Ven|Sam)\\s*,?\\s*)?" +
     "([0-9]{1,2}|1er)" +
@@ -23,72 +27,118 @@ private let monthNameGroup = 5
 private let yearGroup = 6
 private let yearBeGroup = 7
 
+// --------------
+// MARK: - Parser
+// --------------
+
 public class FRMonthNameLittleEndianParser: Parser {
-    override var pattern: String { return PATTERN }
-    override var language: Language { return .french }
+    
+    // ------------------
+    // MARK: - Properties
+    // ------------------
+
+    override var pattern: String { PATTERN }
+    
+    override var language: Language { .french }
+    
+    // ---------------
+    // MARK: - Extract
+    // ---------------
     
     override public func extract(text: String, ref: Date, match: NSTextCheckingResult, opt: [OptionType: OptionValue]) -> ParsedResult? {
+        
         let (matchText, index) = matchTextAndIndex(from: text, andMatchResult: match)
+        
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
         let a = match.string(from: text, atRangeIndex: monthNameGroup).lowercased()
+        
         let month = FR_MONTH_OFFSET[a]!
         
         let day = Int(match.string(from: text, atRangeIndex: dateGroup).replacingOccurrences(of: "er", with: ""))!
         
         if match.isNotEmpty(atRangeIndex: yearGroup) {
+            
             var year = Int(match.string(from: text, atRangeIndex: yearGroup).trimmed())!
             
             if match.isNotEmpty(atRangeIndex: yearBeGroup) {
+                
                 let yearBe = match.string(from: text, atRangeIndex: yearBeGroup)
+                
                 if NSRegularExpression.isMatch(forPattern: "a", in: yearBe) {
+                    
                     // Ante Christe natum
                     year = -year
+                    
                 }
+                
             } else if year < 100 {
                 
                 year = year + 2000;
+                
             }
             
             result.start.assign(.day, value: day)
+            
             result.start.assign(.month, value: month)
+            
             result.start.assign(.year, value: year)
+            
         } else {
+            
             //Find the most appropriated year
             var refMoment = ref
+            
             refMoment = refMoment.setOrAdded(month, .month)
+            
             refMoment = refMoment.setOrAdded(day, .day)
+            
             refMoment = refMoment.setOrAdded(ref.year, .year)
             
             let nextYear = refMoment.added(1, .year)
+            
             let lastYear = refMoment.added(-1, .year)
+            
             if abs(nextYear.differenceOfTimeInterval(to: ref)) < abs(refMoment.differenceOfTimeInterval(to: ref)) {
+                
                 refMoment = nextYear
+                
             } else if abs(lastYear.differenceOfTimeInterval(to: ref)) < abs(refMoment.differenceOfTimeInterval(to: ref)) {
+                
                 refMoment = lastYear
+                
             }
             
             result.start.assign(.day, value: day)
+            
             result.start.assign(.month, value: month)
+            
             result.start.imply(.year, to: refMoment.year)
+            
         }
         
         // Weekday component
         if match.isNotEmpty(atRangeIndex: weekdayGroup) {
+            
             let weekday = FR_WEEKDAY_OFFSET[match.string(from: text, atRangeIndex: weekdayGroup).lowercased()]
+            
             result.start.assign(.weekday, value: weekday)
+            
         }
         
         // Text can be 'range' value. Such as '12 - 13 janvier 2012'
         if match.isNotEmpty(atRangeIndex: dateToGroup) {
+            
             result.end = result.start.clone()
+            
             result.end?.assign(.day, value: Int(match.string(from: text, atRangeIndex: dateToGroup))!)
+            
         }
         
         result.tags[.frMonthNameLittleEndianParser] = true
+        
         return result
+        
     }
+    
 }
-
-
-

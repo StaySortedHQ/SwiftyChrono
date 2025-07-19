@@ -8,6 +8,10 @@
 
 import Foundation
 
+// -----------------
+// MARK: - Constants
+// -----------------
+
 private let PATTERN = "(\\W|^)" +
     "(?:(?:\\,|\\(|\\（)\\s*)?" +
     "(?:a[mn]\\s*?)?" +
@@ -18,45 +22,76 @@ private let PATTERN = "(\\W|^)" +
     "(?=\\W|$)"
 
 private let prefixGroup = 2
+
 private let weekdayGroup = 3
+
 private let postfixGroup = 4
 
+// --------------
+// MARK: - Parser
+// --------------
+
 public class DEWeekdayParser: Parser {
-    override var pattern: String { return PATTERN }
-    override var language: Language { return .german }
+    
+    // ------------------
+    // MARK: - Properties
+    // ------------------
+
+    override var pattern: String { PATTERN }
+    
+    override var language: Language { .german }
+    
+    // ---------------
+    // MARK: - Extract
+    // ---------------
     
     override public func extract(text: String, ref: Date, match: NSTextCheckingResult, opt: [OptionType: OptionValue]) -> ParsedResult? {
+        
         let (matchText, index) = matchTextAndIndex(from: text, andMatchResult: match)
+        
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
         let dayOfWeek = match.string(from: text, atRangeIndex: weekdayGroup).lowercased()
+        
         guard let offset = DE_WEEKDAY_OFFSET[dayOfWeek] else {
+            
             return nil
+            
         }
         
         let prefix: String? = match.isNotEmpty(atRangeIndex: prefixGroup) ? match.string(from: text, atRangeIndex: prefixGroup) : nil
+        
         let postfix: String? = match.isNotEmpty(atRangeIndex: postfixGroup) ? match.string(from: text, atRangeIndex: postfixGroup) : nil
+        
         var modifier = ""
+        
         if prefix != nil || postfix != nil {
+            
             let norm = (prefix ?? postfix ?? "").lowercased()
             
             // fix it later
             if norm.hasPrefix("letzte") {
+                
                 modifier = "last"
-            }
-            else if norm.hasPrefix("nächste") || norm.hasPrefix("kommende") {
+                
+            } else if norm.hasPrefix("nächste") || norm.hasPrefix("kommende") {
+                
                 modifier = "next"
-            }
-            else if norm.hasPrefix("diese") {
+                
+            } else if norm.hasPrefix("diese") {
+                
                 modifier = "this"
+                
             }
+            
         }
         
         result = updateParsedComponent(result: result, ref: ref, offset: offset, modifier: modifier)
+        
         result.tags[.deWeekdayParser] = true
+        
         return result
+        
     }
+    
 }
-
-
-

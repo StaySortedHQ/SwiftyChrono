@@ -8,6 +8,10 @@
 
 import Foundation
 
+// -----------------
+// MARK: - Constants
+// -----------------
+
 /*
  ISO 8601
  http://www.w3.org/TR/NOTE-datetime
@@ -28,60 +32,105 @@ private let PATTERN = "(\\W|^)" +
     "(?=\\W|$)"
 
 private let yearNumberGroup = 2
+
 private let monthNumberGroup = 3
+
 private let dayNumberGroup  = 4
+
 private let hourNumberGroup  = 5
+
 private let minuteNumberGroup = 6
+
 private let secondNumberGroup = 7
+
 private let millisecondNumberGroup = 8
+
 private let tzdHourOffsetGroup = 9
+
 private let tzdMinuteOffsetGroup = 10
 
+// --------------
+// MARK: - Parser
+// --------------
+
 public class ENISOFormatParser: Parser {
-    override var pattern: String { return PATTERN }
+    
+    // ------------------
+    // MARK: - Properties
+    // ------------------
+
+    override var pattern: String { PATTERN }
+    
+    // ---------------
+    // MARK: - Extract
+    // ---------------
     
     override public func extract(text: String, ref: Date, match: NSTextCheckingResult, opt: [OptionType: OptionValue]) -> ParsedResult? {
+        
         let (matchText, index) = matchTextAndIndex(from: text, andMatchResult: match)
+        
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
         result.start.assign(.year, value: Int(match.string(from: text, atRangeIndex: yearNumberGroup)))
+        
         result.start.assign(.month, value: Int(match.string(from: text, atRangeIndex: monthNumberGroup)))
+        
         result.start.assign(.day, value: Int(match.string(from: text, atRangeIndex: dayNumberGroup)))
         
         guard let month = result.start[.month], let day = result.start[.day] else {
+            
             return nil
+            
         }
         
         if month > 12 || month < 1 || day > 31 || day < 1 {
+            
             return nil
+            
         }
         
         if match.isNotEmpty(atRangeIndex: hourNumberGroup) {
+            
             result.start.assign(.hour, value: Int(match.string(from: text, atRangeIndex: hourNumberGroup)))
+            
             result.start.assign(.minute, value: Int(match.string(from: text, atRangeIndex: minuteNumberGroup)))
             
             if match.isNotEmpty(atRangeIndex: secondNumberGroup) {
+                
                 result.start.assign(.second, value: Int(match.string(from: text, atRangeIndex: secondNumberGroup)))
+                
             }
             
             if match.isNotEmpty(atRangeIndex: millisecondNumberGroup) {
+                
                 result.start.assign(.millisecond, value: Int(match.string(from: text, atRangeIndex: millisecondNumberGroup)))
+                
             }
             
             if match.isNotEmpty(atRangeIndex: tzdHourOffsetGroup) {
+                
                 let hourOffset = Int(match.string(from: text, atRangeIndex: tzdHourOffsetGroup)) ?? 0
+                
                 let minuteOffset = match.isNotEmpty(atRangeIndex: tzdMinuteOffsetGroup) ? Int(match.string(from: text, atRangeIndex: tzdMinuteOffsetGroup)) ?? 0 : 0
                 
                 var offset = hourOffset * 60
+                
                 offset = offset + (offset < 0 ? -minuteOffset : minuteOffset)
                 
                 result.start.assign(.timeZoneOffset, value: offset)
+                
             } else {
+                
                 result.start.assign(.timeZoneOffset, value: 0)
+                
             }
+            
         }
         
         result.tags[.enCasualTimeParser] = true
+        
         return result
+        
     }
+    
 }

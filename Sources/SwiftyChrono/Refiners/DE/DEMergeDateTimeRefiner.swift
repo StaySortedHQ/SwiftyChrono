@@ -8,7 +8,18 @@
 
 import Foundation
 
-class DEMergeDateTimeRefiner: MergeDateTimeRefiner {
-    override var PATTERN: String { return "^\\s*(T|vor|nach|um|,|-)?\\s*$" }
-    override var TAGS: TagUnit { return .deMergeDateAndTimeRefiner }
+final class DEMergeDateTimeRefiner: MergeDateTimeRefiner {
+    
+    override var PATTERN: String {
+        
+        "^\\s*(T|vor|nach|um|,|-)?\\s*$"
+        
+    }
+    
+    override var TAGS: TagUnit {
+        
+        .deMergeDateAndTimeRefiner
+        
+    }
+    
 }

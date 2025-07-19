@@ -117,4 +117,5 @@ let EN_ORDINAL_WORDS = [
     "thirtieth": 30,
     "thirty first": 31
 ]
+
 let EN_ORDINAL_WORDS_PATTERN = "(?:\(EN_ORDINAL_WORDS.keys.joined(separator: "|").replacingOccurrences(of: " ", with: "[ -]")))"

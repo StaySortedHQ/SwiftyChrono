@@ -64,6 +64,7 @@ let FR_MONTH_OFFSET = [
 ]
 
 let FR_INTEGER_WORDS_PATTERN = "(?:un|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize)"
+
 let FR_INTEGER_WORDS = [
     "un" : 1,
     "deux" : 2,

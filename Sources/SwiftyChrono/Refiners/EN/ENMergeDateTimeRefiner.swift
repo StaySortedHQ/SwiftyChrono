@@ -8,19 +8,18 @@
 
 import Foundation
 
-class ENMergeDateTimeRefiner: MergeDateTimeRefiner {
-    override var PATTERN: String { return "^\\s*(T|at|after|before|on|of|,|-)?\\s*$" }
-    override var TAGS: TagUnit { return .enMergeDateAndTimeRefiner }
+final class ENMergeDateTimeRefiner: MergeDateTimeRefiner {
+    
+    override var PATTERN: String {
+        
+        "^\\s*(T|at|after|before|on|of|,|-)?\\s*$"
+        
+    }
+    
+    override var TAGS: TagUnit {
+        
+        .enMergeDateAndTimeRefiner
+        
+    }
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
