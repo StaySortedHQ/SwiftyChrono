@@ -47,9 +47,9 @@ public struct Chrono {
     
     let modeOption: ModeOption
     
-    var parsers: [Parser] { return modeOption.parsers }
+    var parsers: [Parser] { modeOption.parsers }
     
-    var refiners: [Refiner] { return modeOption.refiners }
+    var refiners: [Refiner] { modeOption.refiners }
     
     // ------------
     // MARK: - Init
