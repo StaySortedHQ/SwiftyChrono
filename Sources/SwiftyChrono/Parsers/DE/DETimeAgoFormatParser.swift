@@ -140,7 +140,7 @@ public class DETimeAgoFormatParser: Parser {
             
         } else if NSRegularExpression.isMatch(forPattern: "monat", in: matchText3) {
             
-            date = number != HALF ? date.added(-number, .month) : date.added(-(date.numberOf(.day, inA: .month) ?? 30)/2, .day)
+            date = number != HALF ? date.added(-number, .month) : date.added(-(date.numberOf(.day, in: .month) ?? 30)/2, .day)
             
         } else if NSRegularExpression.isMatch(forPattern: "jahr", in: matchText3) {
             

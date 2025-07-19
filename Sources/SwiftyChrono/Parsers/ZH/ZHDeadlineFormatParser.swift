@@ -46,10 +46,6 @@ public class ZHDeadlineFormatParser: Parser {
         
         var result = ParsedResult(ref: ref, index: index, text: matchText)
         
-        let refMoment = ref
-        
-        let startMoment = refMoment
-        
         let numberString = match.string(from: text, atRangeIndex: numberGroup)
         
         let number: Int
@@ -114,7 +110,7 @@ public class ZHDeadlineFormatParser: Parser {
             
         } else if unitAbbr == "月" {
             
-            date = number == HALF ? date.added((date.numberOf(.day, inA: .month) ?? 30)/2, .day) : date.added(number, .month)
+            date = number == HALF ? date.added((date.numberOf(.day, in: .month) ?? 30)/2, .day) : date.added(number, .month)
             
             return ymdResult()
             

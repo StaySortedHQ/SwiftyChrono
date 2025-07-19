@@ -195,9 +195,7 @@ extension Date {
     ///
     /// e.g. the "unit" will be .day, the "baseUnit" will be .month
     
-    #warning("TODO: Rename inA to in")
-    
-    func numberOf(_ unit: Calendar.Component, inA baseUnit: Calendar.Component) -> Int? {
+    func numberOf(_ unit: Calendar.Component, in baseUnit: Calendar.Component) -> Int? {
         
         if let range = cal.range(of: unit, in: baseUnit, for: self) {
             

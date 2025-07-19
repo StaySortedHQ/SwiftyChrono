@@ -110,7 +110,7 @@ public class ENRelativeDateFormatParser: Parser {
                 
             } else if NSRegularExpression.isMatch(forPattern: "month", in: relativeWord) {
                 
-                date = isHalf ? date.added(modifier * (date.numberOf(.day, inA: .month) ?? 30)/2 , .day) : date.added(number * 1, .month)
+                date = isHalf ? date.added(modifier * (date.numberOf(.day, in: .month) ?? 30)/2 , .day) : date.added(number * 1, .month)
                 
                 // We don't know the exact day for next/last month
                 result.start.imply(.day, to: date.day)
