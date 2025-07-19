@@ -35,10 +35,13 @@ public struct Chrono {
     
     /// you can set default imply hour
     public static var defaultImpliedHour: Int = 12
+    
     /// you can set default imply minute
     public static var defaultImpliedMinute: Int = 0
+    
     /// you can set default imply second
     public static var defaultImpliedSecond: Int = 0
+    
     /// you can set default imply millisecond
     public static var defaultImpliedMillisecond: Int = 0
     
