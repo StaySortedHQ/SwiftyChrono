@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ModeOptio {
+public struct ModeOption {
     
     // ------------------
     // MARK: - Properties
@@ -32,9 +32,9 @@ public struct ModeOptio {
     
 }
 
-private func baseOption(strictMode: Bool) -> ModeOptio {
+private func baseOption(strictMode: Bool) -> ModeOption {
     
-    return ModeOptio(
+    return ModeOption(
         parsers: [
         
             // EN
@@ -105,13 +105,13 @@ private func baseOption(strictMode: Bool) -> ModeOptio {
     
 }
 
-func strictModeOption() -> ModeOptio {
+func strictModeOption() -> ModeOption {
     
     baseOption(strictMode: true)
     
 }
 
-public func casualModeOption() -> ModeOptio {
+public func casualModeOption() -> ModeOption {
     
     var options = baseOption(strictMode: false)
     

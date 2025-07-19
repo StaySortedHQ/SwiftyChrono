@@ -42,7 +42,7 @@ public struct Chrono {
     /// you can set default imply millisecond
     public static var defaultImpliedMillisecond: Int = 0
     
-    let modeOption: ModeOptio
+    let modeOption: ModeOption
     
     var parsers: [Parser] { return modeOption.parsers }
     
@@ -52,7 +52,7 @@ public struct Chrono {
     // MARK: - Init
     // ------------
 
-    public init(modeOption: ModeOptio = casualModeOption()) {
+    public init(modeOption: ModeOption = casualModeOption()) {
         
         self.modeOption = modeOption
         
