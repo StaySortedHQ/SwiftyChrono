@@ -10,6 +10,10 @@ import Foundation
 
 class Refiner {
     
+    // --------------
+    // MARK: - Refine
+    // --------------
+    
     public func refine(text: String, results: [ParsedResult], opt: [OptionType: OptionValue]) -> [ParsedResult] {
         
         results
